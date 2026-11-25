@@ -1,0 +1,1 @@
+import{Fc as e}from"../lucide-icons-D0ckPiYb.js";var t={name:`slash`,size:24,node:[[`path`,{d:`M22 2 2 22`,key:`y4kqgn`}]]};t.node;var n=e(t);export{t as __iconData,n as default};

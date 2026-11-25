@@ -1,0 +1,34 @@
+# ---- Gradle ----
+.gradle/
+build/
+*/build/
+gradle-app.setting
+!gradle/wrapper/gradle-wrapper.jar
+
+# ---- 本地环境（每台机器不一样，不要提交）----
+local.properties
+*.iml
+.idea/
+.vscode/
+
+# ---- 构建与临时产物 ----
+*.hprof
+captures/
+.externalNativeBuild/
+.cxx/
+tmp/
+logs/
+
+# ---- 不能进版本库的敏感文件 ----
+*.jks.bak
+*.keystore.bak
+keystore.properties
+folia-gecko.keystore
+
+# ---- 系统 ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- 发布产物：APK 走 GitHub Release 附件，不进 git 历史 ----
+release/*.apk

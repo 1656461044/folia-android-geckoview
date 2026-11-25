@@ -1,0 +1,1 @@
+import{at as e}from"./config-f-0q0GHz.js";import{Ic as t}from"./lucide-icons-D0ckPiYb.js";var n=e(t(),1);function r(e,t,r){(0,n.useInsertionEffect)(()=>e.on(t,r),[e,t,r])}export{r as t};

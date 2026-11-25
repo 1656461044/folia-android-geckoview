@@ -1,0 +1,1 @@
+import{at as e}from"./config-f-0q0GHz.js";import{Ic as t}from"./lucide-icons-D0ckPiYb.js";import{jr as n}from"./noLyricLines-B1OqHLUY.js";import{i as r,r as i}from"./lyricRenderQualityPin-BKkDfENG.js";var a=e(t(),1),o=e=>{let t=r(),o=i(),s=t?void 0:e?.scale,c=t?void 0:e?.antialias;return(0,a.useMemo)(()=>n(o,s&&c?{scale:s,antialias:c}:null),[o,s,c])};export{o as t};

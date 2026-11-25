@@ -1,0 +1,22 @@
+// 当前文件：GeckoView 版 Folia 的 Gradle 项目声明。
+// 仓库优先国内镜像（阿里云 google），Maven Central 走代理，GeckoView 走 Mozilla 官方。
+pluginManagement {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.mozilla.org/maven2/' }
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "FoliaGecko"
+include ':app'

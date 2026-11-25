@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 当前文件：应用主题，深色全屏，与 Folia 视觉一致。 -->
+<resources>
+    <style name="Theme.FoliaGecko" parent="android:Theme.Material.NoActionBar.Fullscreen">
+        <item name="android:windowBackground">#09090b</item>
+        <item name="android:statusBarColor">#09090b</item>
+        <item name="android:navigationBarColor">#09090b</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+</resources>

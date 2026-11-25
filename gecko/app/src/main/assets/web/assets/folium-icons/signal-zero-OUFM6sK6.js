@@ -1,0 +1,1 @@
+import{Fc as e}from"../lucide-icons-D0ckPiYb.js";var t={name:`signal-zero`,size:24,node:[[`path`,{d:`M2 20h.01`,key:`4haj6o`}]]};t.node;var n=e(t);export{t as __iconData,n as default};

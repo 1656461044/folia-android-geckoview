@@ -1,0 +1,29 @@
+# 当前文件：GeckoView 运行时配置（由 GeckoRuntimeSettings.Builder#configFilePath 读取）。
+#
+# 重点：关掉 Service Worker。
+#
+# Folia 是 PWA，页面里有 registerSW.js 会注册 /sw.js（workbox precache）。
+# precache 把 index.html 一起缓存了，而我们把 folia-shim.js 内联在 index.html 里，
+# 于是「换包后行为不变」——页面永远执行 SW 缓存里的旧 shim（platform 永远是 web，
+# 原生播放桥永远装不上）。而且 SW 的缓存是按 origin 持久化的，杀进程、覆盖安装都不清。
+#
+# 这里直接在引擎层关掉 SW；shim 里另外还把 navigator.serviceWorker.register 掐掉了，
+# 双保险。GeckoView 壳不需要离线缓存（资源本来就在本地 127.0.0.1 上）。
+prefs:
+  dom.serviceWorkers.enabled: false
+  dom.serviceWorkers.testing.enabled: false
+
+  # ---- 车机音量问题（已尝试，未生效，保留记录）----
+  # 车机上 GeckoView 的音频走 AAudio 的 MMAP 直通通道
+  # （dumpsys media.audio_flinger：AudioMmapOut_12 / type 5 MMAP_PLAYBACK，
+  #   Stream volume 恒为 1.000000，即使 STREAM_MUSIC 已被旋钮调到 0/Muted），
+  # 这条通道绕开 AudioFlinger 混音器，所以系统音量对它完全无效
+  # （WebView 用普通 AudioTrack，走混音器，原版没这问题）。
+  #
+  # 理论上把 cubeb 后端换成 OpenSLES（普通 AudioTrack）就能让系统音量生效，
+  # 但实测设成 opensl 后输出线程依旧是 AudioMmapOut_*，没有切换成功，
+  # 所以最终改用页面侧主增益接管（见 folia-shim.js 的 E 段）。
+  # media.cubeb.backend: opensl
+
+  # 用来验证本配置文件是否真的被加载（页面 DIAG 会打 navigator.languages）
+  intl.accept_languages: "qq-QQ,qq"

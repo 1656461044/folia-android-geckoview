@@ -1,0 +1,121 @@
+// Current file: module build script for the GeckoView-based Folia.
+//
+// Key constraints (verified 2026-11):
+// 1. GeckoView 160 requires compileSdk>=37 and AGP>=9.1, which is unavailable locally,
+//    so we use GeckoView 139 (2025-06) which fits compileSdk 34 / AGP 8.7.
+// 2. GeckoView pulls in very new androidx.core / media3 transitively; they must be
+//    excluded and pinned back to versions compatible with compileSdk 34.
+// 3. Only arm64-v8a is packaged (target device ABI).
+plugins {
+    id 'com.android.application'
+}
+
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+def hasKeystore = keystorePropertiesFile.exists()
+if (hasKeystore) {
+    keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
+}
+
+android {
+    namespace 'top.izuna.foliagecko'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "top.izuna.foliagecko"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "0.7.29-gecko.1"
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+    }
+
+    signingConfigs {
+        if (hasKeystore) {
+            release {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (hasKeystore) {
+                signingConfig signingConfigs.release
+            }
+        }
+        debug {
+            if (hasKeystore) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    packagingOptions {
+        jniLibs {
+            // true = .so 压缩存放在 APK 内、安装时解压到 data 目录。
+            // GeckoView 的 libxul.so 未压缩就有 136MB，压缩存储能把整包从 184MB
+            // 压到 95MB 左右，对车机传输/安装更友好；两种方式 GeckoView 都能正常加载。
+            useLegacyPackaging = true
+        }
+        resources {
+            excludes += ['META-INF/*.kotlin_module', 'META-INF/DEPENDENCIES', 'META-INF/LICENSE*']
+        }
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.core:core:1.13.1'
+        force 'androidx.core:core-ktx:1.13.1'
+        force 'androidx.annotation:annotation:1.8.0'
+        force 'androidx.annotation:annotation-experimental:1.4.1'
+        force 'androidx.lifecycle:lifecycle-common:2.8.7'
+        force 'androidx.lifecycle:lifecycle-process:2.8.7'
+        force 'androidx.collection:collection:1.4.5'
+        force 'androidx.media3:media3-common:1.4.1'
+        force 'androidx.media3:media3-datasource:1.4.1'
+        force 'androidx.media3:media3-decoder:1.4.1'
+        force 'androidx.media3:media3-exoplayer:1.4.1'
+        force 'androidx.media3:media3-exoplayer-hls:1.4.1'
+    }
+}
+
+dependencies {
+    implementation('org.mozilla.geckoview:geckoview:139.0.20250609112858') {
+        exclude group: 'androidx.core'
+        exclude group: 'androidx.annotation'
+        exclude group: 'androidx.lifecycle'
+        exclude group: 'androidx.collection'
+        exclude group: 'androidx.media3'
+        exclude group: 'com.google.android.gms'
+    }
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'androidx.annotation:annotation:1.8.0'
+    implementation 'androidx.lifecycle:lifecycle-common:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-process:2.8.7'
+    implementation 'androidx.collection:collection:1.4.5'
+    implementation 'androidx.media3:media3-common:1.4.1'
+    implementation 'androidx.media3:media3-datasource:1.4.1'
+    implementation 'androidx.media3:media3-decoder:1.4.1'
+    implementation 'androidx.media3:media3-exoplayer:1.4.1'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.4.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+}
